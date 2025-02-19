@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from pydantic import BaseModel
 
-from pokeapi import get_pokemon
+from pokeapi import get_pokemon, get_pokemon_species
 from pokemon_parser import format_pokemon_data
 
 
@@ -13,10 +13,18 @@ async def read_root():
 
 @app.get('/pokemon/{pokemon_name}')
 async def fetch_pokemon(pokemon_name: str):
-    pokemon_data = await get_pokemon(pokemon_name)
-    if not pokemon_data:
-        raise HTTPException(status_code=404, detail='Pokemon Not Found')
     
-    formated_data = format_pokemon_data(pokemon_data)
+    try:
+        raw_pokemon_data = await get_pokemon(pokemon_name)
+        raw_species_data = await get_pokemon_species(pokemon_name)
+    except HTTPException as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.detail)
     
-    return formated_data.model_dump()
+    combined_data = {
+        **raw_pokemon_data,
+        **raw_species_data,
+    }
+
+    formatted_data = format_pokemon_data(combined_data)
+
+    return formatted_data.model_dump()
