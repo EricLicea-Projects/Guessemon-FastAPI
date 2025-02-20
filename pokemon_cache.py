@@ -1,11 +1,13 @@
 import json
+import random
 from datetime import datetime, timedelta
 import redis.asyncio as redis
 
-from pokemon_of_the_day import get_pokemon_of_the_day
 from pokemon_utils import fetch_formatted_pokemon_data
+from pokemon_parser import PokemonData
 
 redis_client = None
+
 
 async def get_redis_client() -> redis.Redis:
 
@@ -13,6 +15,15 @@ async def get_redis_client() -> redis.Redis:
     if redis_client is None:
         redis_client = redis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
     return redis_client
+
+
+
+def get_pokemon_of_the_day() -> int:
+    seed_value = int(datetime.now().strftime('%Y%j'))
+    random.seed(seed_value)
+    return  random.randint(1, 151)
+    
+
 
 async def get_cached_pokemon_of_day() -> dict:
 
@@ -23,7 +34,8 @@ async def get_cached_pokemon_of_day() -> dict:
     cached = await client.get(cache_key)
     if cached:
         print('Cash Hit')
-        return json.loads(cached)
+        cached_dict = json.loads(cached)
+        return PokemonData(**cached_dict)
     
     pokemon_id = get_pokemon_of_the_day()
     formatted_data = await fetch_formatted_pokemon_data(pokemon_id)
@@ -33,4 +45,4 @@ async def get_cached_pokemon_of_day() -> dict:
     ttl = int((tomorrow - now).total_seconds())
     
     await client.set(cache_key, json.dumps(formatted_data.model_dump()), ex=ttl)
-    return formatted_data.model_dump()
+    return formatted_data
