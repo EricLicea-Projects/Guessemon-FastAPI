@@ -1,9 +1,15 @@
 from fastapi import FastAPI, HTTPException, Depends, status
 from pydantic import BaseModel
+from typing import Optional, Dict
 
-from pokeapi import get_pokemon, get_pokemon_species
-from pokemon_parser import format_pokemon_data
+from pokemon_of_the_day import get_pokemon_of_the_day
+from pokemon_utils import fetch_formatted_pokemon_data
+from pokemon_cache import get_cached_pokemon_of_day
 
+
+class GuessResponse(BaseModel):
+    correct: bool
+    hints: Optional[Dict] = None
 
 app = FastAPI()
 
@@ -11,20 +17,21 @@ app = FastAPI()
 async def read_root():
     return {'message': 'Welcome to Guessamon API'}
 
-@app.get('/pokemon/{pokemon_name}')
-async def fetch_pokemon(pokemon_name: str):
-    
-    try:
-        raw_pokemon_data = await get_pokemon(pokemon_name)
-        raw_species_data = await get_pokemon_species(pokemon_name)
-    except HTTPException as exc:
-        raise HTTPException(status_code=exc.status_code, detail=exc.detail)
-    
-    combined_data = {
-        **raw_pokemon_data,
-        **raw_species_data,
-    }
+# Test Endpoint to make sure pokemon of the day is working.
+@app.get('/pokemon_of_day')
+async def pokemon_of_today():
+    return get_pokemon_of_the_day()
 
-    formatted_data = format_pokemon_data(combined_data)
 
-    return formatted_data.model_dump()
+@app.get('/pokemon/{pokemon_id}')
+async def guess_pokemon(pokemon_id: int):
+    pokemon_of_day_id = get_pokemon_of_the_day()
+
+    if pokemon_of_day_id == pokemon_id:
+        return GuessResponse(correct=True)
+    
+    formatted_guess = await fetch_formatted_pokemon_data(pokemon_id)
+    formatted_correct = await get_cached_pokemon_of_day()
+    print(formatted_correct)
+
+    return GuessResponse(correct=False)
