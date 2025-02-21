@@ -13,7 +13,7 @@ async def get_redis_client() -> redis.Redis:
 
     global redis_client
     if redis_client is None:
-        redis_client = redis.from_url("redis://localhost", encoding="utf8", decode_responses=True)
+        redis_client = redis.from_url("redis://127.0.0.1", encoding="utf8", decode_responses=True)
     return redis_client
 
 
@@ -25,7 +25,7 @@ def get_pokemon_of_the_day() -> int:
     
 
 
-async def get_cached_pokemon_of_day() -> dict:
+async def get_cached_pokemon_of_day() -> PokemonData:
 
     client = await get_redis_client()
     day_key = datetime.now().strftime("%Y-%m-%d")

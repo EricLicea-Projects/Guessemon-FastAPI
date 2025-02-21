@@ -20,10 +20,11 @@ async def read_root():
 
 @app.get('/pokemon/{pokemon_id}')
 async def guess_pokemon(pokemon_id: int):
-
     formatted_guess = await fetch_formatted_pokemon_data(pokemon_id)
     formatted_correct = await get_cached_pokemon_of_day()
 
-    hints = compare_pokemon_data(formatted_guess, formatted_correct)
-
-    return GuessResponse(correct=False, hints=hints)
+    if formatted_guess.id == formatted_correct.id:
+        return GuessResponse(correct=True, hints={})
+    else:
+        hints = compare_pokemon_data(formatted_guess, formatted_correct)
+        return GuessResponse(correct=False, hints=hints)
