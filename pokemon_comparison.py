@@ -16,17 +16,29 @@ def compare_pokemon_data(guess: PokemonData, correct: PokemonData) -> Dict[str, 
 
     guess_types = set(guess.types or [])
     correct_types = set(correct.types or [])
+
     types_comparison = {
-        "common": list(guess_types.intersection(correct_types)),
-        "guess_only": list(guess_types - correct_types),
-        "correct_only": list(correct_types - guess_types)
+        "shared": list(guess_types.intersection(correct_types)),
+        "guess": list(guess_types),
+        "guess_single": len(guess_types) == 1,
+        "correct_single": len(correct_types) == 1,
+        "both_single": (len(guess_types) == 1 and len(correct_types) == 1)
     }
     
     comparison_result = {
         "types": types_comparison,
-        "color": guess.color == correct.color,
-        "habitat": guess.habitat == correct.habitat,
-        "shape": guess.shape == correct.shape,
+        "color": {
+            "is_correct": guess.color == correct.color,
+            "guess": guess.color,
+        },
+        "habitat": {
+            "is_correct": guess.habitat == correct.habitat,
+            "guess": guess.habitat,
+        },
+        "shape": {
+            "is_correct": guess.shape == correct.shape,
+            "guess": guess.shape,
+        },
         "height": compare_numeric(guess.height, correct.height),
         "weight": compare_numeric(guess.weight, correct.weight)
     }
