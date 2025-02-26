@@ -26,6 +26,7 @@ def compare_pokemon_data(guess: PokemonData, correct: PokemonData) -> Dict[str, 
     }
     
     comparison_result = {
+        "id": guess.id,
         "types": types_comparison,
         "color": {
             "is_correct": guess.color == correct.color,
