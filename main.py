@@ -16,6 +16,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "https://guessemon.vercel.app"
 ]
 
 app.add_middleware(
@@ -25,6 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get('/')
 async def read_root():
