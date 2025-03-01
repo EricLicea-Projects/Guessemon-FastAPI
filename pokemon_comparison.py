@@ -32,9 +32,9 @@ def compare_pokemon_data(guess: PokemonData, correct: PokemonData) -> Dict[str, 
             "is_correct": guess.color == correct.color,
             "guess": guess.color,
         },
-        "habitat": {
-            "is_correct": guess.habitat == correct.habitat,
-            "guess": guess.habitat,
+        "generation": {
+            "is_correct": guess.generation == correct.generation,
+            "guess": guess.generation,
         },
         "shape": {
             "is_correct": guess.shape == correct.shape,

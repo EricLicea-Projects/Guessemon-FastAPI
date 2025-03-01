@@ -35,9 +35,9 @@ async def read_root():
 async def guess_pokemon(pokemon_id: int):
     formatted_guess = await fetch_formatted_pokemon_data(pokemon_id)
     formatted_correct = await get_cached_pokemon_of_day()
+    hints = compare_pokemon_data(formatted_guess, formatted_correct)
 
     if formatted_guess.id == formatted_correct.id:
-        return GuessResponse(correct=True, hints={})
+        return GuessResponse(correct=True, hints=hints)
     else:
-        hints = compare_pokemon_data(formatted_guess, formatted_correct)
         return GuessResponse(correct=False, hints=hints)
