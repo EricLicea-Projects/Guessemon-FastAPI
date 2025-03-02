@@ -15,7 +15,9 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "https://guessemon.vercel.app"
+    "https://guessemon.vercel.app",
+    "https://guessamon.xyz",
+    "https://www.guessamon.xyz"
 ]
 
 app.add_middleware(
