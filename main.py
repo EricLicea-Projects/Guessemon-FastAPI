@@ -33,6 +33,10 @@ app.add_middleware(
 async def read_root():
     return {'message': 'Welcome to Guessamon API'}
 
+@app.get('/pokemon_of_day')
+async def pokemon_of_day():
+    return await get_cached_pokemon()
+    
 
 @app.get('/pokemon/{pokemon_id}')
 async def guess_pokemon(pokemon_id: int):
