@@ -3,8 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, Dict
 
-from pokemon_cache import get_cached_pokemon
+from pokemon_cache import get_cached_pokemon,  clear_redis_cache
 from pokemon_comparison import compare_pokemon_data
+
 
 
 class GuessResponse(BaseModel):
@@ -29,11 +30,18 @@ app.add_middleware(
 )
 
 
-
-
 @app.get('/')
 async def read_root():
     return {'message': 'Welcome to Guessamon API'}
+
+
+@app.post("/clear_cache")
+async def clear_cache_endpoint():
+    try:
+        await clear_redis_cache()
+        return {"message": "Redis cache cleared successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get('/pokemon_of_day')
 async def pokemon_of_day():

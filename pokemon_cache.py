@@ -18,6 +18,11 @@ async def get_redis_client() -> redis.Redis:
         redis_client = redis.from_url("redis://red-cv1ai0ogph6c73atdshg:6379", encoding="utf8", decode_responses=True)
     return redis_client
 
+async def clear_redis_cache() -> None:
+    client = await get_redis_client()
+    await client.flushall()
+
+
 def get_pokemon_of_the_day() -> int:
     seed_value = int(datetime.now().strftime('%Y%j'))
     random.seed(seed_value)
