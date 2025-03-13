@@ -35,26 +35,23 @@ async def read_root():
     return {'message': 'Welcome to Guessamon API'}
 
 
-@app.post("/clear_cache")
-async def clear_cache_endpoint():
-    try:
-        await clear_redis_cache()
-        return {"message": "Redis cache cleared successfully."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# @app.post("/clear_cache")
+# async def clear_cache_endpoint():
+#     try:
+#         await clear_redis_cache()
+#         return {"message": "Redis cache cleared successfully."}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get('/pokemon_of_day')
 async def pokemon_of_day():
     return await get_cached_pokemon()
     
 
-@app.get('/pokemon/{pokemon_id}')
-async def guess_pokemon(pokemon_id: int):
+@app.post('/guesses/{pokemon_id}')
+async def submit_guess(pokemon_id: int):
     formatted_guess = await get_cached_pokemon(pokemon_id)
     formatted_correct = await get_cached_pokemon()
     hints = compare_pokemon_data(formatted_guess, formatted_correct)
 
-    if formatted_guess.id == formatted_correct.id:
-        return GuessResponse(correct=True, hints=hints)
-    else:
-        return GuessResponse(correct=False, hints=hints)
+    return GuessResponse(correct=(formatted_guess.id == formatted_correct.id), hints=hints)
