@@ -26,7 +26,7 @@ async def clear_redis_cache() -> None:
 def get_pokemon_of_the_day() -> int:
     seed_value = int(datetime.now().strftime('%Y%j'))
     random.seed(seed_value)
-    return random.randint(1, 151)
+    return random.randint(1, 1025)
 
 async def get_cached_pokemon(pokemon_id: Optional[int] = None) -> PokemonData:
     client = await get_redis_client()
