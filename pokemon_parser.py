@@ -16,7 +16,6 @@ class PokemonData(BaseModel):
     color: Optional[str]
     flavor_text: Optional[str]
     generation: Optional[str]
-    habitat: Optional[str]
     is_baby: Optional[bool]
     is_legendary: Optional[bool]
     is_mythical: Optional[bool]
