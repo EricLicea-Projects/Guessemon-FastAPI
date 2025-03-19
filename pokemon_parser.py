@@ -58,7 +58,6 @@ def format_pokemon_data(raw_data: dict) -> PokemonData:
         'color': raw_data.get('color', {}).get('name'),
         'flavor_text': flavor_text,
         'generation': raw_data.get('generation', {}).get('name'),
-        'habitat': raw_data.get('habitat', {}).get('name'),
         'is_baby': raw_data.get('is_baby'),
         'is_legendary': raw_data.get('is_legendary'),
         'is_mythical': raw_data.get('is_mythical'),
