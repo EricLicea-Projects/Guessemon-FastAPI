@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from pokemon_parser import PokemonData
+from app.schemas import PokemonData
 
 def compare_numeric(guess_val: int | None, correct_val: int | None) -> str | None:
     if guess_val is None or correct_val is None:

@@ -5,7 +5,7 @@ from typing import Optional
 import redis.asyncio as redis
 
 from pokemon_utils import fetch_formatted_pokemon_data
-from pokemon_parser import PokemonData
+from app.schemas import PokemonData
 
 redis_client = None
 
@@ -15,7 +15,7 @@ redis_client = None
 async def get_redis_client() -> redis.Redis:
     global redis_client
     if redis_client is None:
-        redis_client = redis.from_url("redis://red-cv1ai0ogph6c73atdshg:6379", encoding="utf8", decode_responses=True)
+        redis_client = redis.from_url("redis://127.0.0.1", encoding="utf8", decode_responses=True)
     return redis_client
 
 async def clear_redis_cache() -> None:
