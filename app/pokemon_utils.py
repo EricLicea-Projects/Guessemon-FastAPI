@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from pokeapi import get_pokemon, get_pokemon_species
+from app.clients import get_pokemon, get_pokemon_species
 from pokemon_parser import format_pokemon_data
 from app.schemas import PokemonData
 
