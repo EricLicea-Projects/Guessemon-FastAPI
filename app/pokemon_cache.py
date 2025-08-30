@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 import redis.asyncio as redis
 
-from pokemon_utils import fetch_formatted_pokemon_data
+from app.services.pokemon_service import fetch_formatted_pokemon_data
 from app.schemas import PokemonData
 
 redis_client = None

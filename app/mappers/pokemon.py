@@ -1,32 +1,41 @@
-import random
-import re
+import random, re
 from app.schemas import PokemonData
 
 
-def format_pokemon_data(raw_data: dict) -> PokemonData:
-    types = [t['type']['name'] for t in raw_data.get('types', [])]
-    abilities = [a['ability']['name'] for a in raw_data.get('abilities', [])]
-    stats = [s['base_stat'] for s in raw_data.get('stats', [])]
-
-    flavor_text_entries = raw_data.get('flavor_text_entries', [])
-    english_flavor_texts = [
+def _pick_english_flavor_text(entries: list[dict], pokemon_name: str, pokemon_id: int)-> str:
+    english = [
         entry.get('flavor_text', '')
         .replace('\n', ' ')
         .replace('\u000c', ' ')
         .strip()
-        for entry in flavor_text_entries
+        for entry in entries
         if entry.get('language', {}).get('name') == 'en'
     ]
 
-    flavor_text = random.choice(english_flavor_texts) if english_flavor_texts else None
+    if not english:
+        return ''
+    
+    text = random.Random(pokemon_id).choice(english)
+    return re.sub(re.escape(pokemon_name), '*' * len(pokemon_name), text, flags=re.IGNORECASE) if pokemon_name else text
 
+
+def to_pokemon_data(raw_data: dict) -> PokemonData:
+    types = [t['type']['name'] for t in raw_data.get('types', [])]
+    abilities = [a['ability']['name'] for a in raw_data.get('abilities', [])]
+    stats = [s['base_stat'] for s in raw_data.get('stats', [])]
+
+    pokemon_id = raw_data.get('id')
     pokemon_name = raw_data.get('name', '')
-    if flavor_text and pokemon_name:
-        name_pattern = re.escape(pokemon_name)
-        flavor_text = re.sub(name_pattern, '*' * len(pokemon_name), flavor_text, flags=re.IGNORECASE)
+
+    
+    flavor_text = _pick_english_flavor_text(
+        raw_data.get('flavor_text_entries', []),
+        pokemon_name,
+        pokemon_id,
+    )
 
     data = {
-        'id': raw_data.get('id'),
+        'id': pokemon_id,
         'name': pokemon_name,
         'types': types,
         'abilities': abilities,
