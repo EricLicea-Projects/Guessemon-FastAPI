@@ -5,7 +5,7 @@ from fastapi.security.api_key import APIKeyHeader, APIKey
 
 from app.schemas import GuessResponse
 from pokemon_cache import get_cached_pokemon, clear_redis_cache
-from pokemon_comparison import compare_pokemon_data
+from app.services.hints import compare_pokemon_data
 
 
 app = FastAPI()
