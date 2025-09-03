@@ -1,6 +1,7 @@
 import redis.asyncio as redis
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 
 from app.core.settings import settings
@@ -35,3 +36,7 @@ app.add_middleware(
 
 app.include_router(game_router, prefix='/api/v1')
 app.include_router(ops_router, prefix='/ops')
+
+@app.get('/', include_in_schema=False)
+def root():
+    return RedirectResponse(url='/docs')
