@@ -11,7 +11,7 @@ A backend for the Guessamon game built with [FastAPI](https://fastapi.tiangolo.c
 **Run**
 ```bash
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload```
 
 
 ## Endpoints
