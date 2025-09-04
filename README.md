@@ -22,6 +22,7 @@ Returns the current (UTC-based) Pokémon, already mapped for the game.
 ```bash
 curl http://127.0.0.1:8000/api/v1/pokemon_of_day
 ```
+#### Pokemon Data
 ```json
 {
   "id": 25,
@@ -40,5 +41,34 @@ curl http://127.0.0.1:8000/api/v1/pokemon_of_day
   "is_legendary": false,
   "is_mythical": false,
   "shape": "quadruped"
+}
+```
+### Notes
+- Cached in Redis and rolls over at the next UTC midnight.
+
+### POST `/api/v1/guesses/{pokemon_id}`
+Compares your guess to the correct Pokémon and returns whether it’s correct. If not correct, it will include a hints object to assist the player on their next guess.
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/guesses/25
+```
+#### Guess Response
+```json
+{
+  "correct": false,
+  "hints": {
+    "id": 25,
+    "types": {
+      "shared": ["electric"],
+      "guess": ["electric"],
+      "guess_single": true,
+      "correct_single": true,
+      "both_single": true
+    },
+    "color": { "is_correct": false, "guess": "yellow" },
+    "generation": { "is_correct": true, "guess": "generation-i" },
+    "shape": { "is_correct": false, "guess": "quadruped" },
+    "height": "higher",
+    "weight": "lower"
+  }
 }
 ```
