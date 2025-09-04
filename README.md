@@ -1,7 +1,6 @@
 # Guessamon API (FastAPI)
 
-Backend for the Guessamon game.  
-Provides a *Pokémon of the day* (UTC-based) and compares user guesses against it. Caches results in Redis.
+A FastAPI backend for my Guessamon game. It fetches Pokémon data from PokeAPI, formats it into a clean schema, caches results in Redis, and exposes simple endpoints for my frontend.
 
 ## Tech
 - FastAPI
