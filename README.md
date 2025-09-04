@@ -22,6 +22,7 @@ Returns the current (UTC-based) Pokémon, already mapped for the game.
 ```bash
 curl http://127.0.0.1:8000/api/v1/pokemon_of_day
 ```
+```json
 {
   "id": 25,
   "name": "pikachu",
@@ -40,3 +41,4 @@ curl http://127.0.0.1:8000/api/v1/pokemon_of_day
   "is_mythical": false,
   "shape": "quadruped"
 }
+```
