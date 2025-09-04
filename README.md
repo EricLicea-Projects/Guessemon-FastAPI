@@ -12,3 +12,13 @@ A backend for the Guessamon game built with [FastAPI](https://fastapi.tiangolo.c
 ```bash
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+
+
+## Endpoints
+
+### GET `/api/v1/pokemon_of_day`
+Returns the current (UTC-based) Pokémon, already mapped for the game.
+
+**200 OK**
+```bash
+curl http://127.0.0.1:8000/api/v1/pokemon_of_day
