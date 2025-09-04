@@ -1,17 +1,4 @@
 # Guessamon API (FastAPI)
 
-A FastAPI backend for my Guessamon game. It fetches Pokémon data from PokeAPI, formats it into a clean schema, caches results in Redis, and exposes simple endpoints for my frontend.
+A backend for the Guessamon game built with [FastAPI](https://fastapi.tiangolo.com/). It fetches Pokémon data from [PokeAPI](https://pokeapi.co/), maps it into game-friendly “hints” that the frontend uses during guessing, and caches both the formatted Pokémon data and hints in [Redis](https://redis.io/) to avoid repeated upstream calls during multiple guesses.
 
-## Tech
-- FastAPI
-- Redis
-- httpx
-- Pydantic v2
-
-## Endpoints
-
-### GET `/api/v1/pokemon_of_day`
-Returns the current Pokémon (formatted).
-
-```bash
-curl http://127.0.0.1:8000/api/v1/pokemon_of_day
