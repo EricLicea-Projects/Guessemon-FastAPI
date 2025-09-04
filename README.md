@@ -9,16 +9,34 @@ A backend for the Guessamon game built with [FastAPI](https://fastapi.tiangolo.c
 - A Redis instance (local or hosted). Default local URL: `redis://127.0.0.1:6379`
 
 **Run**
-` ```bash
+```bash
 pip install -r requirements.txt
-uvicorn app.main:app --reload`
-
+uvicorn app.main:app --reload
+```
 
 ## Endpoints
 
 ### GET `/api/v1/pokemon_of_day`
 Returns the current (UTC-based) Pokémon, already mapped for the game.
 
-**200 OK**
 ```bash
 curl http://127.0.0.1:8000/api/v1/pokemon_of_day
+```
+{
+  "id": 25,
+  "name": "pikachu",
+  "types": ["electric"],
+  "abilities": ["static","lightning-rod"],
+  "stats": [35,55,40,50,50,90],
+  "height": 4,
+  "weight": 60,
+  "base_experience": 112,
+  "capture_rate": 190,
+  "color": "yellow",
+  "flavor_text": "When several of these POKéMON gather...",
+  "generation": "generation-i",
+  "is_baby": false,
+  "is_legendary": false,
+  "is_mythical": false,
+  "shape": "quadruped"
+}
