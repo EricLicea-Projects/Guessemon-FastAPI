@@ -9,9 +9,9 @@ A backend for the Guessamon game built with [FastAPI](https://fastapi.tiangolo.c
 - A Redis instance (local or hosted). Default local URL: `redis://127.0.0.1:6379`
 
 **Run**
-```bash
+` ```bash
 pip install -r requirements.txt
-uvicorn app.main:app --reload```
+uvicorn app.main:app --reload`
 
 
 ## Endpoints
