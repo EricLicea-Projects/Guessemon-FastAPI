@@ -18,6 +18,11 @@ def _pick_english_flavor_text(entries: list[dict], pokemon_name: str, pokemon_id
     text = random.Random(pokemon_id).choice(english)
     return re.sub(re.escape(pokemon_name), '*' * len(pokemon_name), text, flags=re.IGNORECASE) if pokemon_name else text
 
+def _to_meters(height_dm):
+    return height_dm / 10 if isinstance(height_dm, (int, float)) else None
+
+def _to_kilograms(weight_hg):
+    return weight_hg / 10 if isinstance(weight_hg, (int, float)) else None
 
 def to_pokemon_data(raw_data: dict) -> PokemonData:
     types = [t['type']['name'] for t in raw_data.get('types', [])]
@@ -26,6 +31,9 @@ def to_pokemon_data(raw_data: dict) -> PokemonData:
 
     pokemon_id = raw_data.get('id')
     pokemon_name = raw_data.get('name', '')
+
+    height_m = _to_meters(raw_data.get('height'))
+    weight_kg = _to_kilograms(raw_data.get('weight'))
 
     
     flavor_text = _pick_english_flavor_text(
@@ -40,8 +48,8 @@ def to_pokemon_data(raw_data: dict) -> PokemonData:
         'types': types,
         'abilities': abilities,
         'stats': stats,
-        'height': raw_data.get('height'),
-        'weight': raw_data.get('weight'),
+        'height': height_m,
+        'weight': weight_kg,
         'base_experience': raw_data.get('base_experience'),
         'capture_rate': raw_data.get('capture_rate'),
         'color': raw_data.get('color', {}).get('name'),
