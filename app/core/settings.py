@@ -1,5 +1,5 @@
 from typing import List
-from pydantic import AnyUrl, field_validator
+from pydantic import AnyUrl, field_validator, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     )
 
     REDIS_URL: AnyUrl = 'redis://127.0.0.1:6379'
+    DATABASE_URL: PostgresDsn | None = None
     API_KEY: str | None = None
 
     CORS_ORIGINS: List[str] = [
