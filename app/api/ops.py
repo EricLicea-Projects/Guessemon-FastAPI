@@ -1,8 +1,10 @@
 import asyncpg
+import httpx
 import redis.asyncio as redis
-from fastapi import APIRouter, Security, Depends
+from fastapi import APIRouter, Security, Depends, Path
 
-from app.api.deps import get_redis, get_pg_conn
+from app.api.deps import get_redis, get_pg_conn, get_http_client
+from app.services.grand_archive_service import get_omni_local_event
 from app.core.security import require_api_key
 from app.cache.redis_cache import clear_redis_cache
 
@@ -27,3 +29,12 @@ async def db_ping(
     
     value = await conn.fetchval('SELECT 1;')
     return {'OK': value == 1}
+
+
+@router.get('/get_omni_event/{event_id}')
+async def get_omni_event(
+    event_id: int = Path(..., ge=1),
+    client: httpx.AsyncClient = Depends(get_http_client),
+    _: None = Security(require_api_key),
+):
+    return await get_omni_local_event(client, event_id)
