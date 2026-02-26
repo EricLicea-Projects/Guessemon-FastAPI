@@ -4,13 +4,15 @@ from datetime import datetime
 
 class OmniEventData(BaseModel):
     event: dict
-    players: dict
+    players: List
     standings: dict
     rounds: List
 
 class OmniEvent(BaseModel):
     event_id: int
     ranked: bool
+    players: List
+    judges: List
     swiss_match_config: str
     swiss_rounds: int
     start_at: datetime
