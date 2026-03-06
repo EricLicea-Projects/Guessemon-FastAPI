@@ -59,7 +59,7 @@ def map_standings(event_id: int, standings: dict)-> List[omni.OmniEventStanding]
                 placement=placement,
                 wins=standing.get('statsWins'),
                 losses=standing.get('statsLosses'),
-                ties=standing.get('statsTies'),
+                stalemates=standing.get('statsTies'),
                 byes=standing.get('statsByes'),
                 score=standing.get('statsScore'),
             )

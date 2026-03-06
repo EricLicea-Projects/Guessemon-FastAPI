@@ -1,5 +1,5 @@
-from typing import List
-from pydantic import BaseModel, HttpUrl
+from typing import List, Annotated
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 class OmniEventData(BaseModel):
@@ -7,6 +7,7 @@ class OmniEventData(BaseModel):
     players: List
     standings: dict
     rounds: List
+
 
 class OmniEvent(BaseModel):
     event_id: int
@@ -16,7 +17,7 @@ class OmniEvent(BaseModel):
     swiss_match_config: str
     swiss_rounds: int
     start_at: datetime
-    url: HttpUrl
+    url: str
 
 class OmniPlayer(BaseModel):
     player_id: int
@@ -32,7 +33,7 @@ class OmniEventStanding(BaseModel):
     placement: int
     wins: int
     losses: int
-    ties: int
+    stalemates: int
     byes: int
     score: int
 
@@ -45,3 +46,9 @@ class OmniEventParticipant(BaseModel):
     score: int
     status: str
     elo_change: float
+
+class OmniCrudPayload(BaseModel):
+    event: OmniEvent
+    players: Annotated[list[OmniPlayer], Field(min_length=1)]
+    standings: Annotated[list[OmniEventStanding], Field(min_length=1)]
+    participants: Annotated[list[OmniEventParticipant], Field(min_length=1)]

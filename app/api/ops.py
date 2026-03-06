@@ -8,6 +8,8 @@ from app.services.grand_archive_service import get_omni_local_event
 from app.core.security import require_api_key
 from app.cache.redis_cache import clear_redis_cache
 from app.mappers import omni_event_mapper as oem
+from app.schemas.omni_event_data import OmniCrudPayload
+from app.db.omni_event.event_transactions import event_transactions
 
 
 router = APIRouter(tags = ['ops'])
@@ -36,12 +38,22 @@ async def db_ping(
 async def get_omni_event(
     event_id: int = Path(..., ge=1),
     client: httpx.AsyncClient = Depends(get_http_client),
+    conn: asyncpg.Connection = Depends(get_pg_conn),
     _: None = Security(require_api_key),
 ):
     data = await get_omni_local_event(client, event_id)
-    # mapped_event = oem.map_event(data.event)
-    # mapped_players = oem.map_players(data.players)
-    # mapped_standings = oem.map_standings(event_id, data.standings)
+    mapped_event = oem.map_event(data.event)
+    mapped_players = oem.map_players(data.players)
+    mapped_standings = oem.map_standings(event_id, data.standings)
     mapped_participants = oem.map_participants(event_id, data.rounds)
 
-    return mapped_participants
+    payload = OmniCrudPayload(
+        event=mapped_event,
+        players=mapped_players,
+        standings=mapped_standings,
+        participants=mapped_participants,
+    )
+
+    transaction_id = await event_transactions(conn, payload)
+
+    return {'status': f'Ok for event: {transaction_id}'}
