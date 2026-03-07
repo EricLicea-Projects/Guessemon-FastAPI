@@ -7,7 +7,7 @@ from app.cache.redis_cache import get_cached_pokemon
 from app.schemas import GuessResponse, PokemonData
 from app.services.hints import compare_pokemon_data
 
-router = APIRouter(tags=['game'])
+router = APIRouter(tags=['Guessamon'])
 
 @router.get('/pokemon_of_day', response_model=PokemonData)
 async def pokemon_of_day(

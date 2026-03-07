@@ -4,7 +4,8 @@ from fastapi.responses import RedirectResponse
 
 from app.core.settings import settings
 from app.core.lifespan import lifespan
-from app.api.v1.game import router as game_router
+from app.api.guessamon.v1.game import router as game_router
+from app.api.localdex.v1.localdex import router as localdex_router
 from app.api.ops import router as ops_router
 
 
@@ -20,7 +21,8 @@ app.add_middleware(
 )
 
 
-app.include_router(game_router, prefix='/api/v1')
+app.include_router(game_router, prefix='/api/guessamon/v1')
+app.include_router(localdex_router, prefix='/api/localdex/v1')
 app.include_router(ops_router, prefix='/ops')
 
 @app.get('/', include_in_schema=False)

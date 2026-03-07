@@ -12,7 +12,7 @@ from app.schemas.omni_event_data import OmniCrudPayload
 from app.db.omni_event.event_transactions import event_transactions
 
 
-router = APIRouter(tags = ['ops'])
+router = APIRouter(tags = ['Ops'])
 
 @router.post('/clear_cache')
 async def clear_cache(
