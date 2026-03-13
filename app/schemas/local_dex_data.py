@@ -1,5 +1,5 @@
-from typing import List, Annotated
-from pydantic import BaseModel, Field
+from typing import Optional
+from pydantic import BaseModel
 from datetime import datetime
 
 class LocalEvent(BaseModel):
@@ -19,3 +19,10 @@ class LocalStanding(BaseModel):
     stalemates: int
     byes: int
     score: int
+    main_element_id: int
+    champion_id: int
+    main_element: str
+    champion_element: str
+    champion_name: str
+    champion_class: str
+    champion_sub_class: Optional[str] = None
