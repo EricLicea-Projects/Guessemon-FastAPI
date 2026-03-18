@@ -26,3 +26,8 @@ class LocalStanding(BaseModel):
     champion_name: str
     champion_class: str
     champion_sub_class: Optional[str] = None
+
+class MainElementPlayRate(BaseModel):
+    element_name: str
+    times_played: int
+    play_rate: float
