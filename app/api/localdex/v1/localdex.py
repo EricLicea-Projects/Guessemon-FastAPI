@@ -3,6 +3,7 @@ import asyncpg
 
 from app.api.deps import get_pg_conn
 from app.services.recent_standings import fetch_recent_standings
+from app.db.local_dex.get_player_stats import get_player_stats
 
 router = APIRouter(tags=['LocalDex'])
 
@@ -11,3 +12,10 @@ async def get_recent_standings(
         conn: asyncpg.Connection = Depends(get_pg_conn)
 ):
     return await fetch_recent_standings(conn)
+
+
+@router.get('/player-stats')
+async def get_player_stats_table(
+        conn: asyncpg.Connection = Depends(get_pg_conn)
+):
+    return await get_player_stats(conn)

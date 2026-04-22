@@ -11,7 +11,7 @@ async def fetch_recent_standings(
     standings = await get_event_standings(event.event_id, conn)
     main_element_play_rates = await get_main_element_play_rates(conn)
 
-    if not standings or not main_element_play_rates:
+    if not standings:
         return []
     
     return {

@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 class LocalEvent(BaseModel):
@@ -31,3 +31,14 @@ class MainElementPlayRate(BaseModel):
     element_name: str
     times_played: int
     play_rate: float
+
+class PlayerStats(BaseModel):
+    player_id: int
+    username: str
+    player_cp: int
+    total_wins: int
+    total_losses: int
+    total_games: int
+    win_rate: float
+    main_element: str
+    top_3_champions: list[str] = Field(default_factory=list)
