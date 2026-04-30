@@ -14,14 +14,18 @@ DEFAULT_LIMITS = httpx.Limits(max_connections=100, max_keepalive_connections=20)
 async def init_redis(app: FastAPI) -> None:
     r = redis.from_url(
         str(settings.REDIS_URL),
-        encoding="utf8",
+        encoding="utf-8",
         decode_responses=True,
+        socket_connect_timeout=5,
+        socket_timeout=5,
+        health_check_interval=30,
     )
+
     try:
         await r.ping()
     except RedisError as e:
         await r.aclose()
-        raise RuntimeError(f"Redis is unavailable at {settings.REDIS_URL}") from e
+        raise RuntimeError("Redis is unavailable") from e
 
     app.state.redis = r
 
@@ -32,9 +36,6 @@ async def close_redis(app: FastAPI) -> None:
         app.state.redis = None
 
 async def init_postgres(app: FastAPI) -> None:
-    if not settings.DATABASE_URL:
-        raise RuntimeError("DATABASE_URL is not set")
-
     await init_pg_pool(app, dsn=str(settings.DATABASE_URL))
 
     try:
@@ -42,7 +43,7 @@ async def init_postgres(app: FastAPI) -> None:
             await conn.fetchval("SELECT 1;")
     except Exception as e:
         await close_pg_pool(app)
-        raise RuntimeError(f"Postgres is unavailable at {settings.DATABASE_URL}") from e
+        raise RuntimeError("Postgres is unavailable") from e
 
 async def close_postgres(app: FastAPI) -> None:
     pool = getattr(app.state, "pg_pool", None)
