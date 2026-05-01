@@ -1,2 +1,4 @@
-MAINTENANCE_KEY = "guessamon:maintenance"
-DATA_VERSION_KEY = "guessamon:data_version"
+CACHE_NAMESPACE = "guessamon"
+
+MAINTENANCE_KEY = f"{CACHE_NAMESPACE}:maintenance"
+DATA_VERSION_KEY = f"{CACHE_NAMESPACE}:data_version"

@@ -1,9 +1,11 @@
 import json
+from datetime import UTC, datetime
+
 
 import asyncpg
 import httpx
 import redis.asyncio as redis
-from fastapi import APIRouter, Security, Depends, Path
+from fastapi import APIRouter, Security, Depends, Path, Body
 from pydantic import BaseModel
 
 from app.api.deps import get_redis, get_pg_conn, get_http_client
@@ -11,6 +13,7 @@ from app.services.grand_archive_service import get_omni_local_event
 from app.core.security import require_api_key
 from app.cache.redis_cache import clear_redis_cache
 from app.cache.keys import MAINTENANCE_KEY
+from app.cache.keys import DATA_VERSION_KEY
 from app.mappers import omni_event_mapper as oem
 from app.schemas.omni_event_data import OmniCrudPayload
 from app.db.omni_event.event_transactions import event_transactions
@@ -57,6 +60,33 @@ async def maintenance_off(
         "message": "Maintenance mode disabled.",
     }
 
+
+@router.post("/publish-data-version")
+async def publish_data_version(
+    r: redis.Redis = Depends(get_redis),
+    _: None = Security(require_api_key),
+):
+    new_version = datetime.now(UTC).isoformat(timespec="seconds")
+
+    await r.set(DATA_VERSION_KEY, new_version)
+
+    return {
+        "status": "published",
+        "data_version": new_version,
+        "message": "Redis data version updated successfully.",
+    }
+
+
+@router.get("/data-version")
+async def get_data_version(
+    r: redis.Redis = Depends(get_redis),
+    _: None = Security(require_api_key),
+):
+    version = await r.get(DATA_VERSION_KEY)
+
+    return {
+        "data_version": version,
+    }
 
 @router.post("/clear_cache")
 async def clear_cache(

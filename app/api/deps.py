@@ -41,3 +41,14 @@ async def get_pg_conn(
 
     async with pool.acquire() as conn:
         yield conn
+
+
+def get_pg_pool(request: Request) -> asyncpg.Pool:
+    pool = getattr(request.app.state, "pg_pool", None)
+
+    if pool is None:
+        raise RuntimeError(
+            "Postgres pool is not initialized. Did lifespan call init_pg_pool()?"
+        )
+
+    return cast(asyncpg.Pool, pool)
