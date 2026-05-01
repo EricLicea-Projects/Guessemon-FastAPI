@@ -6,7 +6,7 @@ from redis.exceptions import RedisError
 from fastapi import FastAPI
 
 from app.core.settings import settings
-from app.db.postgres import init_pg_pool, close_pg_pool
+from app.db.postgres import create_pg_pool, close_pg_pool
 
 DEFAULT_TIMEOUT = httpx.Timeout(10.0, connect=5.0)
 DEFAULT_LIMITS = httpx.Limits(max_connections=100, max_keepalive_connections=20)
@@ -36,19 +36,23 @@ async def close_redis(app: FastAPI) -> None:
         app.state.redis = None
 
 async def init_postgres(app: FastAPI) -> None:
-    await init_pg_pool(app, dsn=str(settings.DATABASE_URL))
+    pool = await create_pg_pool(dsn=str(settings.DATABASE_URL))
 
     try:
-        async with app.state.pg_pool.acquire() as conn:
+        async with pool.acquire() as conn:
             await conn.fetchval("SELECT 1;")
     except Exception as e:
-        await close_pg_pool(app)
+        await close_pg_pool(pool)
         raise RuntimeError("Postgres is unavailable") from e
+
+    app.state.pg_pool = pool
+
 
 async def close_postgres(app: FastAPI) -> None:
     pool = getattr(app.state, "pg_pool", None)
+
     if pool is not None:
-        await close_pg_pool(app)
+        await close_pg_pool(pool)
         app.state.pg_pool = None
 
 async def init_http_client(app: FastAPI) -> None:
