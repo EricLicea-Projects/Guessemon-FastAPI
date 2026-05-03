@@ -18,7 +18,7 @@ class Settings(BaseSettings):
         "https://guessemon.vercel.app",
         "https://guessamon.xyz",
         "https://www.guessamon.xyz",
-        "https://local-dex.vercel.app/"
+        "https://local-dex.vercel.app"
     ]
 
     @field_validator('CORS_ORIGINS', mode='before')
