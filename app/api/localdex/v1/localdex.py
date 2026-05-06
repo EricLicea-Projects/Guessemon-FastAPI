@@ -7,6 +7,7 @@ import redis.asyncio as redis
 from app.api.deps import get_pg_pool, get_redis
 from app.services.recent_standings import fetch_recent_standings
 from app.db.local_dex.get_player_stats import get_player_stats
+from app.db.local_dex.get_champion_stats import get_champion_stats
 from app.db.local_dex.player_profile import player_profile
 from app.cache.redis_cache import (
     get_data_version,
@@ -57,6 +58,25 @@ async def get_player_stats_table(
         fetch_from_db,
     )
 
+
+@router.get("/champion-stats")
+async def get_champion_stats_table(
+    r: redis.Redis = Depends(get_redis),
+    pool: asyncpg.Pool = Depends(get_pg_pool),
+):
+    version = await get_data_version(r)
+    cache_key = make_cache_key(version, "localdex:champion-stats")
+
+    async def fetch_from_db():
+        async with pool.acquire() as conn:
+            conn = cast(asyncpg.Connection, conn)
+            return await get_champion_stats(conn)
+
+    return await get_or_set_json(
+        r,
+        cache_key,
+        fetch_from_db,
+    )
 
 @router.get("/player-profile/{player_id}")
 async def get_player_profile(

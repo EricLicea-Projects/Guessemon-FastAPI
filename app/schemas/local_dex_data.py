@@ -47,3 +47,15 @@ class PlayerStats(BaseModel):
     main_element_id: int
     main_element: str
     top_3_champions: list[TopChampion]
+
+class Element(BaseModel):
+    element_id: int
+    element_name: str
+
+
+class ChampionStats(BaseModel):
+    champion_id: int
+    champion_name: str
+    pick_rate: float
+    win_rate: float
+    top_elements: list[Element]
